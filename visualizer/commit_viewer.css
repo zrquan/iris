@@ -1,0 +1,25 @@
+.diff-file {
+  margin-top: 10px;
+  padding: 10px;
+  background-color: rgba(0, 0, 0, 0.05);
+}
+
+.diff-file pre {
+  line-height: 16px;
+  font-family: monospace;
+}
+
+.diff-file pre .line {
+  line-height: 16px;
+  margin: 0;
+  padding: 0;
+  font-family: monospace;
+}
+
+.diff-file pre .line.remove {
+  background-color: rgba(255, 0, 0, 0.2);
+}
+
+.diff-file pre .line.add {
+  background-color: rgba(0, 255, 0, 0.2);
+}

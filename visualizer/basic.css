@@ -1,0 +1,141 @@
+* {
+  font-family: sans-serif;
+  font-size: 12px;
+}
+
+body {
+  margin: 0;
+  padding: 0;
+}
+
+.absolute {
+  position: absolute;
+}
+
+.center {
+  text-align: center;
+}
+
+.full-height {
+  padding-top: 20px;
+  padding-bottom: 20px;
+  height: calc(100% - 40px);
+}
+
+.full-width {
+  padding-left: 20px;
+  padding-right: 20px;
+  width: calc(100% - 40px);
+}
+
+.row {
+  display: flex;
+}
+
+.fill {
+  flex: 1;
+}
+
+#sidebar {
+  width: 300px;
+}
+
+#projects-holder {
+  width: 100%;
+  height: calc(100% - 50px);
+  overflow-y: scroll;
+  overflow-x: scroll;
+}
+
+#projects {
+  list-style: none;
+  padding: 0;
+}
+
+#projects li {
+  line-height: 24px;
+  padding: 0 10px;
+  border-radius: 3px;
+  cursor: pointer;
+  text-wrap: nowrap;
+}
+
+#projects li.active {
+  background-color: rgba(230, 230, 230, 1);
+}
+
+#projects li:hover {
+  background-color: rgba(0, 0, 0, 0.05);
+}
+
+#projects li.active:hover {
+  background-color: rgba(220, 220, 220, 1);
+}
+
+#projects li .cve-id {
+  font-family: monospace;
+}
+
+#projects li .project {
+  font-weight: bold;
+}
+
+.cwe-id {
+  line-height: 16px;
+  font-size: 10px;
+  display: inline-block;
+  padding: 0 8px;
+  margin-left: 5px;
+  background-color: rgba(245, 245, 245, 1);
+  border: 1px solid rgba(120, 120, 120, 1);
+  color: rgba(80, 80, 80, 1);
+  border-radius: 3px;
+}
+
+#projects li.active .cwe-id {
+  background-color: rgba(200, 200, 200, 1);
+}
+
+#main {
+  padding: 20px;
+  height: calc(100% - 40px);
+  overflow-y: scroll;
+  line-height: 24px;
+}
+
+.commit, .label {
+  line-height: 24px;
+  display: inline-block;
+  margin-left: 10px;
+  background-color: rgba(0, 0, 0, 0.05);
+  text-decoration: none;
+  border-radius: 12px;
+  padding: 0 10px;
+  font-size: 10px;
+  border: 1px solid rgba(120, 120, 120, 1);
+}
+
+.commit:hover, .label:hover {
+  background-color: rgba(0, 0, 0, 0.08);
+}
+
+.commit:active, .label:active {
+  background-color: rgba(0, 0, 0, 0.12);
+}
+
+.divider {
+  display: block;
+  height: 1px;
+  width: 100%;
+  background-color: rgba(0, 0, 0, 0.5);
+  margin-bottom: 10px;
+}
+
+#fix-locations li {
+  line-height: 12px;
+}
+
+#fix-locations li a {
+  font-family: monospace;
+  line-height: 12px;
+}
