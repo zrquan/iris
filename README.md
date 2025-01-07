@@ -18,7 +18,7 @@ We have curated a dataset of Java projects, containing 120 vulnerabilities acros
 
 ## Quickstart
 
-## Adding a CWE
+## Adding a CWE (Coming soon)
 
 ## Contributing
 
