@@ -14,12 +14,12 @@ import random
 from tqdm import tqdm
 from tqdm.contrib.concurrent import thread_map
 
-from codeql.strategies_v2.config import CODEQL_DIR, CODEQL_DB_PATH, PACKAGE_NAMES_PATH, OUTPUT_DIR, ALL_METHOD_INFO_DIR, PROJECT_SOURCE_CODE_DIR, CVES_MAPPED_W_COMMITS_DIR
-from codeql.strategies_v2.prompts import POSTHOC_FILTER_SYSTEM_PROMPT, POSTHOC_FILTER_USER_PROMPT, POSTHOC_FILTER_USER_PROMPT_W_CONTEXT, POSTHOC_FILTER_HINTS, SNIPPET_CONTEXT_SIZE
-from codeql.strategies_v2.queries import QUERIES
+from src.config import CODEQL_DIR, CODEQL_DB_PATH, PACKAGE_NAMES_PATH, OUTPUT_DIR, ALL_METHOD_INFO_DIR, PROJECT_SOURCE_CODE_DIR, CVES_MAPPED_W_COMMITS_DIR
+from src.prompts import POSTHOC_FILTER_SYSTEM_PROMPT, POSTHOC_FILTER_USER_PROMPT, POSTHOC_FILTER_USER_PROMPT_W_CONTEXT, POSTHOC_FILTER_HINTS, SNIPPET_CONTEXT_SIZE
+from src.queries import QUERIES
 
-from models.gpt import GPTModel
-from models.llm import LLM
+from src.models.gpt import GPTModel
+from src.models.llm import LLM
 
 class ContextualAnalysisPipeline:
     def __init__(

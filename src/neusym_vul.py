@@ -16,32 +16,32 @@ from tqdm import tqdm
 from tqdm.contrib.concurrent import thread_map
 
 THIS_SCRIPT_DIR = os.path.dirname(os.path.realpath(__file__))
-NEUROSYMSA_ROOT_DIR = os.path.abspath(f"{THIS_SCRIPT_DIR}/../../")
+NEUROSYMSA_ROOT_DIR = os.path.abspath(f"{THIS_SCRIPT_DIR}/../")
 sys.path.append(NEUROSYMSA_ROOT_DIR)
 
 try:
-    from codeql.strategies_v2.config import CODEQL_DIR, CODEQL_DB_PATH, PACKAGE_NAMES_PATH, OUTPUT_DIR, ALL_METHOD_INFO_DIR, PROJECT_SOURCE_CODE_DIR, CVES_MAPPED_W_COMMITS_DIR
+    from src.config import CODEQL_DIR, CODEQL_DB_PATH, PACKAGE_NAMES_PATH, OUTPUT_DIR, ALL_METHOD_INFO_DIR, PROJECT_SOURCE_CODE_DIR, CVES_MAPPED_W_COMMITS_DIR
 except:
     print("[ERROR] Configuration file (config.py) not found. Under strategies directory, do\n\n\tcp config_template.py config.py\n\nand modify the content of config.py")
     exit(1)
 
-from codeql.strategies_v2.logger import Logger
-from codeql.strategies_v2.queries import QUERIES
-from codeql.strategies_v2.prompts import API_LABELLING_SYSTEM_PROMPT, API_LABELLING_USER_PROMPT
-from codeql.strategies_v2.prompts import FUNC_PARAM_LABELLING_SYSTEM_PROMPT, FUNC_PARAM_LABELLING_USER_PROMPT
+from src.logger import Logger
+from src.queries import QUERIES
+from src.prompts import API_LABELLING_SYSTEM_PROMPT, API_LABELLING_USER_PROMPT
+from src.prompts import FUNC_PARAM_LABELLING_SYSTEM_PROMPT, FUNC_PARAM_LABELLING_USER_PROMPT
 
-from codeql.strategies_v2.codeql_queries import QL_SOURCE_PREDICATE, QL_STEP_PREDICATE, QL_SINK_PREDICATE
-from codeql.strategies_v2.codeql_queries import EXTENSION_YML_TEMPLATE, EXTENSION_SRC_SINK_YML_ENTRY, EXTENSION_SUMMARY_YML_ENTRY
-from codeql.strategies_v2.codeql_queries import QL_METHOD_CALL_SOURCE_BODY_ENTRY, QL_FUNC_PARAM_SOURCE_ENTRY, QL_FUNC_PARAM_NAME_ENTRY
-from codeql.strategies_v2.codeql_queries import QL_SUMMARY_BODY_ENTRY, QL_BODY_OR_SEPARATOR
-from codeql.strategies_v2.codeql_queries import QL_SUBSET_PREDICATE, CALL_QL_SUBSET_PREDICATE
-from codeql.strategies_v2.codeql_queries import QL_SINK_BODY_ENTRY, QL_SINK_ARG_NAME_ENTRY, QL_SINK_ARG_THIS_ENTRY
+from src.codeql_queries import QL_SOURCE_PREDICATE, QL_STEP_PREDICATE, QL_SINK_PREDICATE
+from src.codeql_queries import EXTENSION_YML_TEMPLATE, EXTENSION_SRC_SINK_YML_ENTRY, EXTENSION_SUMMARY_YML_ENTRY
+from src.codeql_queries import QL_METHOD_CALL_SOURCE_BODY_ENTRY, QL_FUNC_PARAM_SOURCE_ENTRY, QL_FUNC_PARAM_NAME_ENTRY
+from src.codeql_queries import QL_SUMMARY_BODY_ENTRY, QL_BODY_OR_SEPARATOR
+from src.codeql_queries import QL_SUBSET_PREDICATE, CALL_QL_SUBSET_PREDICATE
+from src.codeql_queries import QL_SINK_BODY_ENTRY, QL_SINK_ARG_NAME_ENTRY, QL_SINK_ARG_THIS_ENTRY
 
-from codeql.strategies_v2.modules.codeql_query_runner import CodeQLQueryRunner
-from codeql.strategies_v2.modules.contextual_analysis_pipeline import ContextualAnalysisPipeline
-from codeql.strategies_v2.modules.evaluation_pipeline import EvaluationPipeline
+from src.modules.codeql_query_runner import CodeQLQueryRunner
+from src.modules.contextual_analysis_pipeline import ContextualAnalysisPipeline
+from src.modules.evaluation_pipeline import EvaluationPipeline
 
-from models.llm import LLM
+from src.models.llm import LLM
 
 CODEQL = f"{CODEQL_DIR}/codeql"
 CODEQL_CUSTOM_QUERY_DIR = f"{CODEQL_DIR}/qlpacks/codeql/java-queries/0.8.3/myqueries"
@@ -155,10 +155,10 @@ class SAPipeline:
         # Load some basic information, such as commits and fixes related to the CVE
         self.project_source_code_dir = f"{PROJECT_SOURCE_CODE_DIR}/{self.project_name}"
         self.all_cves_with_commit = pd.read_csv(CVES_MAPPED_W_COMMITS_DIR)
-        self.project_cve_with_commit_info = self.all_cves_with_commit[self.all_cves_with_commit["cve"] == self.cve_id].iloc[0]
-        self.cve_fixing_commits = self.project_cve_with_commit_info["commits"].split(";")
+        self.project_cve_with_commit_info = self.all_cves_with_commit[self.all_cves_with_commit["cve_id"] == self.cve_id].iloc[0]
+        self.cve_fixing_commits = self.project_cve_with_commit_info["fix_commit_ids"].split(";")
         self.fixed_methods = pd.read_csv(ALL_METHOD_INFO_DIR)
-        self.project_fixed_methods = self.fixed_methods[self.fixed_methods["db_name"] == self.project_name]
+        self.project_fixed_methods = self.fixed_methods[self.fixed_methods["project_slug"] == self.project_name]
         self.project_fixed_modules = self.project_fixed_methods[
             self.project_fixed_methods["file"].str.contains("src/main") &
             self.project_fixed_methods["file"].str.endswith(".java")]
