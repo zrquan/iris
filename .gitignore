@@ -6,5 +6,6 @@ projects-gh
 commit_data
 old
 outputs*
+output/
 
 **/__pycache__
