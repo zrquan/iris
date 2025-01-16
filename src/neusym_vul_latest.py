@@ -20,7 +20,7 @@ NEUROSYMSA_ROOT_DIR = os.path.abspath(f"{THIS_SCRIPT_DIR}/../../")
 sys.path.append(NEUROSYMSA_ROOT_DIR)
 
 try:
-    from codeql.strategies_v2.config_latest import CODEQL_DIR, CODEQL_DB_PATH, OUTPUT_DIR, PROJECT_SOURCE_CODE_DIR, PACKAGE_NAMES_PATH
+    from codeql.strategies_v2.config_latest import CODEQL_DIR, CODEQL_DB_PATH, OUTPUT_DIR, PROJECT_SOURCE_CODE_DIR, PACKAGE_MODULES_PATH
 except:
     print("[ERROR] Configuration file (config_latest.py) not found. Under strategies directory, do\n\n\tcp config_template.py config.py\n\nand modify the content of config.py")
     exit(1)
@@ -239,12 +239,12 @@ class SAPipeline:
         runner.run(query, target_csv_path, suffix, dyn_queries)
 
     def keep_external_packages(self, api_candidates_df):
-        packages = open(f"{PACKAGE_NAMES_PATH}/{self.project_name}.txt").readlines()
+        packages = open(f"{PACKAGE_MODULES_PATH}/{self.project_name}.txt").readlines()
         packages = [p.strip() for p in packages]
         return api_candidates_df[~api_candidates_df["package"].isin(packages)]
 
     def keep_internal_packages(self, api_candidates_df):
-        packages = open(f"{PACKAGE_NAMES_PATH}/{self.project_name}.txt").readlines()
+        packages = open(f"{PACKAGE_MODULES_PATH}/{self.project_name}.txt").readlines()
         packages = [p.strip() for p in packages]
         return api_candidates_df[api_candidates_df["package"].isin(packages)]
 

@@ -11,7 +11,7 @@ import copy
 import math
 import random
 
-from src.config import CODEQL_DIR, CODEQL_DB_PATH, PACKAGE_NAMES_PATH, OUTPUT_DIR, ALL_METHOD_INFO_DIR, PROJECT_SOURCE_CODE_DIR, CVES_MAPPED_W_COMMITS_DIR
+from src.config import CODEQL_DIR 
 from src.queries import QUERIES
 
 CODEQL = f"{CODEQL_DIR}/codeql"
