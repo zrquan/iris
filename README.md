@@ -8,6 +8,9 @@ Iris is a neurosymbolic framework that combines LLMs with static analysis for se
 - [Contributing](#contributing)
 
 ## Architecture
+
+![iris architecture](iris_arch.png)
+
 1. First we make CodeQL queries to collect external APIs in the project and all internal function parameters. 
 2. We provide the LLM the external APIs to find potential sources, sinks, and taint propagators. In another query, we provide the LLM the internal function parameters for potential sources.
 3. Given the results from step 2, we use them to build project specific CodeQL queries. 
