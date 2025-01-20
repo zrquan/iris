@@ -4,6 +4,8 @@ IRIS is a neurosymbolic framework that combines LLMs with static analysis for se
 - [Architecture](#architecture)
 - [Environment Setup](#environment-setup)
 - [Quickstart](#quickstart)
+- [Supported CWEs](#supported-cwes)
+- [Supported Models](#supported-models)
 - [Adding a CWE](#adding-a-cwe)
 - [Contributing](#contributing)
 
@@ -92,23 +94,137 @@ Make sure you have followed all of the environment setup instructions before pro
 
 `src/neusym_vul.py` is used to analyze one specific project. `src/neusym_vul_for_query.py` is used to analyze multiple projects. Results are written to the `output` directory.
 
-The following is an example of using IRIS to analyze zerotunaround for vulnerabilities that fall under CWE-022, using GPT-4. 
+See the [Supported CWEs](#supported-cwes) section for `--query` arguments and the [Supported Models](#supported-models) section for `--llm` arguments.
+
+The following is an example of using IRIS to analyze zerotunaround for vulnerabilities that fall under CWE-022, using GPT-4. Query `cwe-022wLLM` refers to [cwe-22 path traversal](https://cwe.mitre.org/data/definitions/22.html). 
 ```bash
 $ python3 src/neusym_vul.py --query cwe-022wLLM --run-id <SOME_ID> --llm gpt-4 zeroturnaround__zt-zip_CVE-2018-1002201_1.12
 ```
 
+
 The following is an example of using IRIS to analyze all of the cwe-java-bench projects for vulnerabilities that fall under CWE-022, using `gemma-2-27b-tai` (hosted by TogetherAI).
 ```bash
-$ python3 src/neusym_vul_for_query.py cwe-022wLLM --run-id <SOME_ID> --llm gemma-2-27b-tai
+$ python3 src/neusym_vul_for_query.py --query cwe-022wLLM --run-id <SOME_ID> --llm gemma-2-27b-tai
 ```
 
-We support the following models with the models API wrapper in the project. You're free to use your own way of instantiating models. 
+## Supported CWEs
+Here are the following CWEs supported, that you can specify as an argument to `--query` when using `src/neusym_vul.py` and `src/neusym_vul_for_query.py`. 
 
+- `cwe-022wLLM` - [CWE-022](https://cwe.mitre.org/data/definitions/22.html) (Path Traversal)
+- `cwe-078wLLM` - [CWE-078](https://cwe.mitre.org/data/definitions/78.html) (OS Command Injection)
+- `cwe-079wLLM` - [CWE-079](https://cwe.mitre.org/data/definitions/79.html) (Cross-Site Scripting)
+- `cwe-094wLLM` - [CWE-094](https://cwe.mitre.org/data/definitions/94.html) (Code Injection)
+
+
+
+## Supported Models
+We support the following models with our models API wrapper (found in `src/models`) in the project. Listed below are the arguments you can use for `--llm` when using `src/neusym_vul.py` and `src/neusym_vul_for_query.py`. You're free to use your own way of instantiating models or adding on to the existing library. Some of them require your own API key or license agreement on HuggingFace. 
+
+### Codegen
+- `codegen-16b-multi`
+- `codegen25-7b-instruct`
+- `codegen25-7b-multi`
+
+### Codellama
+#### Standard Models
+- `codellama-70b-instruct`
+- `codellama-34b`
+- `codellama-34b-python`
+- `codellama-34b-instruct`
+- `codellama-13b-instruct`
+- `codellama-7b-instruct`
+
+#### Fine-tuned Models
+- `codellama-7b-instruct-finetuned-juliet-cpp-1k`
+- `codellama-7b-instruct-cvefixes-cpp-1k`
+- `codellama-7b-instruct-cvefixes-cpp-2k`
+- `codellama-7b-instruct-cvefixes-cpp-2k-cl`
+- `codellama-7b-instruct-cvefixes-c-cpp-method_2300_val`
+
+### CodeT5p
+- `codet5p-16b-instruct`
+- `codet5p-16b`
+- `codet5p-6b`
+- `codet5p-2b`
+
+### DeepSeek
+- `deepseekcoder-33b`
+- `deepseekcoder-7b`
+- `deepseekcoder-v2-15b`
+
+### Gemini
+- `gemini-1.5-pro`
+- `gemini-1.5-flash`
+- `gemini-pro`
+- `gemini-pro-vision`
+- `gemini-1.0-pro-vision`
+
+### Gemma
+- `gemma-7b`
+- `gemma-7b-it`
+- `gemma-2b`
+- `gemma-2b-it`
+- `codegemma-7b-it`
+- `gemma-2-27b`
+- `gemma-2-9b`
+
+### GPT
+- `gpt-4`
+- `gpt-3.5`
+- `gpt-4-1106`
+- `gpt-4-0613`
+
+### LLaMA
+#### LLaMA-2
+- `llama-2-7b-chat`
+- `llama-2-13b-chat`
+- `llama-2-70b-chat`
+- `llama-2-7b`
+- `llama-2-13b`
+- `llama-2-70b`
+
+#### LLaMA-3
+- `llama-3-8b`
+- `llama-3.1-8b`
+- `llama-3-70b`
+- `llama-3.1-70b`
+- `llama-3-70b-tai`
+
+### Mistral
+- `mistral-7b-instruct`
+- `mixtral-8x7b-instruct`
+- `mixtral-8x7b`
+- `mixtral-8x22b`
+- `mistral-codestral-22b`
+
+### Qwen
+- `qwen2.5-coder-7b`
+- `qwen2.5-coder-1.5b`
+- `qwen2.5-14b`
+- `qwen2.5-32b`
+- `qwen2.5-72b`
+
+### StarCoder
+- `starcoder`
+- `starcoder2-15b`
+
+### WizardLM
+#### WizardCoder
+- `wizardcoder-15b`
+- `wizardcoder-34b-python`
+- `wizardcoder-13b-python`
+
+#### WizardLM Base
+- `wizardlm-70b`
+- `wizardlm-13b`
+- `wizardlm-30b`
 
 
 ## Adding a CWE (Coming soon)
 
-## Contributing
+## Contributing and Feedback
+Feel free to address any open issues or add your own issue and fix. We love feedback! Please adhere to the following guidelines. 
+
 1. Create a Github issue outlining the piece of work. Solicit feedback from anyone who has recently contributed to the component of the repository you plan to contribute to. 
 2. Checkout a branch from main - preferably name your branch [github username]/[brief description of contribution]
 3. Create a pull request that refers to the created github issue in the commit message.
