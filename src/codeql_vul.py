@@ -20,13 +20,13 @@ NEUROSYMSA_ROOT_DIR = os.path.abspath(f"{THIS_SCRIPT_DIR}/../../")
 sys.path.append(NEUROSYMSA_ROOT_DIR)
 
 try:
-    from codeql.strategies_v2.config import CODEQL_DIR, CODEQL_DB_PATH, PACKAGE_NAMES_PATH, OUTPUT_DIR, ALL_METHOD_INFO_DIR, PROJECT_SOURCE_CODE_DIR, CVES_MAPPED_W_COMMITS_DIR
+    from src.config import CODEQL_DIR, CODEQL_DB_PATH, OUTPUT_DIR, ALL_METHOD_INFO_DIR, PROJECT_SOURCE_CODE_DIR, CVES_MAPPED_W_COMMITS_DIR
 except:
     print("[ERROR] Configuration file (config.py) not found. Under strategies directory, do\n\n\tcp config_template.py config.py\n\nand modify the content of config.py")
     exit(1)
 
 from codeql.strategies_v2.logger import Logger
-from codeql.strategies_v2.queries import QUERIES
+from src.queries import QUERIES
 from codeql.strategies_v2.prompts import API_LABELLING_SYSTEM_PROMPT, API_LABELLING_USER_PROMPT
 from codeql.strategies_v2.prompts import FUNC_PARAM_LABELLING_SYSTEM_PROMPT, FUNC_PARAM_LABELLING_USER_PROMPT
 from codeql.strategies_v2.prompts import POSTHOC_FILTER_SYSTEM_PROMPT, POSTHOC_FILTER_USER_PROMPT, POSTHOC_FILTER_HINTS, SNIPPET_CONTEXT_SIZE
