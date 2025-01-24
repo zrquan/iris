@@ -13,12 +13,7 @@ _model_name_map = {
     "codellama-34b-python": 'codellama/CodeLlama-34b-Python-hf',
     "codellama-34b-instruct": 'codellama/CodeLlama-34b-Instruct-hf',
     "codellama-13b-instruct": 'codellama/CodeLlama-13b-Instruct-hf',
-    "codellama-7b-instruct": 'codellama/CodeLlama-7b-Instruct-hf',
-    "codellama-7b-instruct-finetuned-juliet-cpp-1k": '/home/saikatd/projects/NeurosymbolicSA/finetuning/results',
-    "codellama-7b-instruct-cvefixes-cpp-1k": '/home/saikatd/projects/NeurosymbolicSA/finetuning/codellama7b-cvefixes_c_cpp_method-1k',
-    "codellama-7b-instruct-cvefixes-cpp-2k": "/home/saikatd/projects/NeurosymbolicSA/finetuning/codellama-7b-instruct-cvefixes-c-cpp-method-2300",
-    "codellama-7b-instruct-cvefixes-cpp-2k-cl": "/home/saikatd/projects/NeurosymbolicSA/finetuning/codellama-7b-instruct-cvefixes-c-cpp-method_classification-2300/checkpoint-500",
-    "codellama-7b-instruct-cvefixes-c-cpp-method_2300_val": "/home/saikatd/projects/NeurosymbolicSA/finetuning/codellama-7b-instruct-cvefixes-c-cpp-method_2300_val"
+    "codellama-7b-instruct": 'codellama/CodeLlama-7b-Instruct-hf', 
 }
 
 class CodeLlamaModel(LLM):

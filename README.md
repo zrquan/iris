@@ -134,13 +134,6 @@ We support the following models with our models API wrapper (found in `src/model
 - `codellama-13b-instruct`
 - `codellama-7b-instruct`
 
-#### Fine-tuned Models
-- `codellama-7b-instruct-finetuned-juliet-cpp-1k`
-- `codellama-7b-instruct-cvefixes-cpp-1k`
-- `codellama-7b-instruct-cvefixes-cpp-2k`
-- `codellama-7b-instruct-cvefixes-cpp-2k-cl`
-- `codellama-7b-instruct-cvefixes-c-cpp-method_2300_val`
-
 ### CodeT5p
 - `codet5p-16b-instruct`
 - `codet5p-16b`
