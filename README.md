@@ -32,7 +32,7 @@ $ git clone https://github.com/seal-research/iris --recursive
 Run `scripts/setup_environment.sh`. 
 ```bash
 $ chmod +x scripts/setup_environment.sh
-$ .scripts/environment.sh
+$ bash ./scripts/environment.sh
 ```
 This will do the following:
 - creates a conda environment specified by environment.yml
