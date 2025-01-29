@@ -7,7 +7,7 @@ IRIS is a neurosymbolic framework that combines LLMs with static analysis for se
 - [Supported CWEs](#supported-cwes)
 - [Supported Models](#supported-models)
 - [Adding a CWE](#adding-a-cwe)
-- [Contributing](#contributing)
+- [Contributing](#contributing-and-feedback)
 
 ## Architecture
 
@@ -213,7 +213,8 @@ We support the following models with our models API wrapper (found in `src/model
 - `wizardlm-30b`
 
 
-## Adding a CWE (Coming soon)
+## Adding a CWE
+Coming soon! 
 
 ## Contributing and Feedback
 Feel free to address any open issues or add your own issue and fix. We love feedback! Please adhere to the following guidelines. 
