@@ -22,7 +22,7 @@ IRIS is a neurosymbolic framework that combines LLMs with static analysis for se
 ## Dataset 
 We have curated a dataset of Java projects, containing 120 vulnerabilities across 4 common vulnerability classes. 
 
-[CWE-Bench-Java](https://github.com/Liby99/cwe-bench-java)
+[CWE-Bench-Java](https://github.com/seal-research/cwe-bench-java)
 ## Environment Setup
 First, clone the repository. We have included `cwe-bench-java` as a submodule, so use the following command the clone correctly
 ```bash
