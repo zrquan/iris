@@ -48,7 +48,6 @@ class GPTModel(LLM):
             _OPENAI_DEFAULT_PARAMS['logprobs']=self.kwargs["logprobs"]
         if 'top_logprobs' in self.kwargs:
              _OPENAI_DEFAULT_PARAMS['top_logprobs']=self.kwargs["top_logprobs"]
-        #print(_OPENAI_DEFAULT_PARAMS)
         if expect_json:
             response = self.client.chat.completions.create(
                 model=self.model_id,
@@ -59,22 +58,18 @@ class GPTModel(LLM):
             response = self.client.chat.completions.create(
                             model=self.model_id,
             messages=prompt,
-            #response_format={"type": "json_object"} if expect_json else {},
             **_OPENAI_DEFAULT_PARAMS)
-        #print(response)
         if response.choices[0].logprobs != None:
             self.logprobs=response.choices[0].logprobs.content
         else:
             self.logprobs=None
-        #print(self.logprobs)
         response=response.choices[0].message.content
 
-        #print(response)
         return response
 
 
 if __name__ == '__main__':
-    from codeql.strategies.prompts import SYSTEM_PROMPTS, USER_PROMPTS
+    from src.prompts import SYSTEM_PROMPTS, USER_PROMPTS
     gpt=GPTModel('gpt-4', None)
     system_prompt=SYSTEM_PROMPTS['SINK']
     user_prompt=USER_PROMPTS["SINK"].format(cwe_description="Command Injection",
