@@ -32,7 +32,7 @@ $ git clone https://github.com/seal-research/iris --recursive
 Run `scripts/setup_environment.sh`. 
 ```bash
 $ chmod +x scripts/setup_environment.sh
-$ .scripts/environment.sh
+$ bash ./scripts/environment.sh
 ```
 This will do the following:
 - creates a conda environment specified by environment.yml
@@ -219,7 +219,7 @@ We support the following models with our models API wrapper (found in `src/model
 Feel free to address any open issues or add your own issue and fix. We love feedback! Please adhere to the following guidelines. 
 
 1. Create a Github issue outlining the piece of work. Solicit feedback from anyone who has recently contributed to the component of the repository you plan to contribute to. 
-2. Checkout a branch from main - preferably name your branch [github username]/[brief description of contribution]
+2. Checkout a branch from `main` - preferably name your branch `[github username]/[brief description of contribution]`
 3. Create a pull request that refers to the created github issue in the commit message.
 4. To link to the github issue, in your commit for example you would simply add in the commit message:
 [what the PR does briefly] #[commit issue]
