@@ -65,7 +65,6 @@ class CodeLlamaModel(LLM):
         return self.predict_main(prompt)
 
 if __name__ == '__main__':
-    model_id = "/home/saikatd/projects/transformers/output/CodeLlama-34b-Instruct-hf"
     system="You are a security researcher, expert in detecting vulnerabilities. Provide response in following format: 'vulnerability: <YES/NO> | vulnerability type: <CWE_ID> | lines of code: <VULNERABLE_LINES_OF_CODE>"
     from data.bigvul import BigVul
     bigvul = BigVul(os.path.join(config.config['DATA_DIR_PATH'] ,"MSR_20_Code_vulnerability_CSV_Dataset"))
