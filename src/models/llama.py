@@ -59,7 +59,6 @@ class LlamaModel(LLM):
         completion = self.together_client.chat.completions.create(
             model=_model_name_map[self.model_name],
             messages=prompt,
-            # response_format={"type": "json_object"},
             temperature=0)
         response = completion.choices[0].message.content
         return response

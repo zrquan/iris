@@ -10,10 +10,7 @@ def get_cwe_mappings():
 
     natures=dict()
     namemap=dict()
-    for element in root[0]:
-        #if re.match(r'Weakness', element.tag):
-        #print(element.tag, element.attrib['ID'])
-        #print(",".join([element.attrib['ID'], element.attrib['Name']]))
+    for element in root[0]: 
 
         for child in element:       
             if "Related_Weakness" in child.tag:
@@ -22,11 +19,6 @@ def get_cwe_mappings():
                         natures[w.attrib['Nature']] = natures.get(w.attrib['Nature'], 0) + 1
                         if w.attrib['Nature'] == 'ChildOf':
                             print(";".join([element.attrib['ID'], element.attrib['Name'], w.attrib['Nature'], w.attrib['CWE_ID']]))
-                #print(">", child.tag, child.text)
-            # print(">", child.tag, child.attrib['ID'])
-    #print(natures)
-
-    #print(elements)
 
 def is_parent(parent, child, df):
     if parent == child:
@@ -45,20 +37,12 @@ def check_cwe(true_id, predicted_id):
     true_id = int(true_id)
     predicted_id = int(predicted_id)    
     df = pd.read_csv("cwemappings.csv", delimiter=";")
-    # if predicted id is equal to target id or a parent of target id, return true
     if true_id == predicted_id:
         return True
-    else:
-        # check if target id is a child of predicted id
-        # if len(df[(df['childid'] == true_id) & (df['relation'] == 'ChildOf') & (df['parentid'] == predicted_id)]) > 0:
-        #     return True
-        # else:
-        #     return False
+    else: 
         return is_parent(predicted_id, true_id, df)
 
 if __name__ == '__main__':
     import sys
     print(check_cwe(sys.argv[1], sys.argv[2]))
-    #print(check_cwe(1004, 732))
-    #get_cwe_mappings()
 

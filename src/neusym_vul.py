@@ -723,8 +723,6 @@ class SAPipeline:
                     ]
 
             # 5. Actually dispatch the tasks
-            # args = range(0, len(candidates), self.label_func_param_batch_size)
-            # indiv_results = thread_map(process_candidate_batch, args, max_workers=self.num_threads)
 
             args = range(0, len(candidates), self.label_func_param_batch_size)
             indiv_prompts = [process_candidate_batch(i) for i in args]
@@ -1077,12 +1075,6 @@ class SAPipeline:
     def is_valid_code_flow(self, code_flow, source_is_func_param, project_methods):
         thread_flow = code_flow["threadFlows"][0]
         locations = thread_flow["locations"]
-
-        # if source_is_func_param:
-        #     source_loc = locations[0]
-        #     source_file_url = source_loc["location"]["physicalLocation"]["artifactLocation"]["uri"]
-        #     source_start_line = source_loc["location"]["physicalLocation"]["region"]["startLine"]
-        #     source_enclosing_func = self.find_enclosing_declaration(source_start_line, source_start_line, project_methods[source_file_url])
 
         snk_line = self.get_source_line(locations[-1])
         if ".println(" in snk_line or ".print(" in snk_line:
