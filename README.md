@@ -2,7 +2,10 @@
 IRIS is a neurosymbolic framework that combines LLMs with static analysis for security vulnerability detection. IRIS uses LLMs to generate source and sink specifications, and to filter false positive vulnerable paths. 
 
 - [Architecture](#architecture)
+- [Dataset](#dataset)
 - [Environment Setup](#environment-setup)
+  - [Linux Setup](#environment-setup-linux)
+  - [Docker Setup](#environment-setup-docker)
 - [Quickstart](#quickstart)
 - [Supported CWEs](#supported-cwes)
 - [Supported Models](#supported-models)
@@ -25,6 +28,11 @@ We have curated a dataset of Java projects, containing 120 vulnerabilities acros
 
 [CWE-Bench-Java](https://github.com/iris-sast/cwe-bench-java)
 ## Environment Setup
+We have provided two ways - for Linux machines and a Dockerfile in case a user doesn't have a Linux machine.
+- [Linux Setup](#environment-setup-linux)
+- [Docker Setup](#environment-setup-docker)
+
+## Environment Setup Linux
 First, clone the repository. We have included `cwe-bench-java` as a submodule, so use the following command to clone correctly
 ```bash
 $ git clone https://github.com/iris-sast/iris --recursive
@@ -39,7 +47,7 @@ This will do the following:
 - creates a conda environment specified by environment.yml
 - installs our [patched version of CodeQL 2.15.3](https://github.com/iris-sast/iris/releases/tag/codeql-0.8.3-patched). This version of CodeQL **is necessary** for IRIS. To prevent confusion in case users already have an existing CodeQL version, we unzip this within the root of the iris directory. Then we add a PATH entry to the path of the patched CodeQL's binary.
 - creates a directory to store CodeQL databases. 
-### 2. Fetch and build Java projects
+### Get the JDKs needed 
 We have included CWE-Bench-Java as a submodule in IRIS in the data folder. We have also provided scripts to fetch and build Java projects to be used with IRIS. 
 
 For building, we need Java distributions as well as Maven and Gradle for package management. In case you have a different system than Linux x64, please modify `data/cwe-bench-java/scripts/jdk_version.json`, `data/cwe-bench-java/scripts/mvn_version.json`, and `data/cwe-bench-java/scripts/gradle_version.json` to specify the corresponding JDK/MVN/Gradle files. In addition, please prepare 3 versions of JDK and put them under the java-env folder. Oracle requires an account to download the JDKs, and we are unable to provide an automated script. Download from the following URLs:
@@ -58,6 +66,43 @@ At this point, your `java-env` directory should look like
   - jdk-17_linux-x64_bin.tar.gz
 ```
 
+Afterwards, proceed to step 2 on fetching and building Java projects.
+
+## Environment Setup Docker
+The dockerfile has scripts that will create the conda environment, clones `cwe-bench-java`, and installs the patched CodeQL version. Before building the dockerfile you will need download the JDK versions needed. Then the dockerfile copies them to the container. 
+### Get the JDKs needed 
+For building, we need Java distributions as well as Maven and Gradle for package management. In addition, please prepare 3 versions of JDK and **put them in the iris root directory**. Oracle requires an account to download the JDKs, and we are unable to provide an automated script. Download from the following URLs:
+
+JDK 7u80: https://www.oracle.com/java/technologies/javase/javase7-archive-downloads.html
+
+JDK 8u202: https://www.oracle.com/java/technologies/javase/javase8-archive-downloads.html
+
+JDK 17: https://www.oracle.com/java/technologies/javase/jdk17-archive-downloads.html
+
+At this point, your `iris` directory should look like 
+```
+- /iris
+  - jdk-7u80-linux-x64.tar.gz
+  - jdk-8u202-linux-x64.tar.gz
+  - jdk-17_linux-x64_bin.tar.gz
+```
+
+Now, build and run the docker container. 
+```bash
+# build
+$ docker build -t iris .
+# run
+$ docker run -it iris
+# run with all GPUs 
+$ docker run --gpus all -it iris
+# run with specific GPUs
+$ docker run --gpus '"device=0,1"' -it iris
+```
+Confirm that the patched CodeQL is in your PATH.
+
+Afterwards, proceed to step 2 on fetching and building Java projects.
+
+### 2. Fetch and build Java projects
 Now run the fetch and build script. You can also choose to fetch and not build, or specify a set of projects. You can find project names in the project_slug column in `cwe-bench-java/data/build_info.csv`.
 ```bash
 # fetch projects and build them

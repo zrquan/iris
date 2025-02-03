@@ -28,6 +28,37 @@ def verify_maven_installation(maven_path):
     if not os.path.exists(mvn_exe):
         raise Exception(f"Maven executable not found at: {mvn_exe}")
 
+def find_java_home(java_version, java_env_path):
+    """
+    Find the appropriate Java home directory based on version and available installations.
+    
+    Args:
+        java_version (str): Version string from build_info.csv
+        java_env_path (str): Base path for Java installations
+    
+    Returns:
+        str: Path to the appropriate Java installation
+    """
+    if 'u' in java_version:
+        # Handle Java 7 and 8 style versions (e.g., 8u202 -> jdk1.8.0_202)
+        main_ver = java_version.split('u')[0]
+        update_ver = java_version.split('u')[1]
+        java_home = os.path.abspath(os.path.join(java_env_path, f"jdk1.{main_ver}.0_{update_ver}"))
+    else:
+        # Handle Java 9+ style versions
+        # First try exact match (e.g., jdk-17)
+        java_home = os.path.abspath(os.path.join(java_env_path, f"jdk-{java_version}"))
+        
+        if not os.path.exists(java_home):
+            # Try finding a matching directory with a more specific version
+            possible_dirs = [d for d in os.listdir(java_env_path) 
+                           if d.startswith(f"jdk-{java_version}")]
+            if possible_dirs:
+                # Use the first matching directory
+                java_home = os.path.abspath(os.path.join(java_env_path, possible_dirs[0]))
+    
+    return java_home
+
 def setup_environment(row, java_env_path):
     env = os.environ.copy()
     
@@ -38,13 +69,9 @@ def setup_environment(row, java_env_path):
         env['PATH'] = f"{maven_path}:{env.get('PATH', '')}"
         print(f"Maven path set to: {maven_path}")
     
-    # Set Java home with absolute path
+    # Find and set Java home
     java_version = row['jdk_version']
-    if 'u' in java_version:  
-        main_ver = java_version.split('u')[0]
-        java_home = os.path.abspath(os.path.join(java_env_path, f"jdk1.{main_ver}.0_{java_version.split('u')[1]}"))
-    else: 
-        java_home = os.path.abspath(os.path.join(java_env_path, f"jdk-{java_version}"))
+    java_home = find_java_home(java_version, java_env_path)
     
     verify_java_installation(java_home)
     env['JAVA_HOME'] = java_home
