@@ -36,7 +36,6 @@ class ContextualAnalysisPipeline:
             posthoc_filtering_output_result_sarif_path,
             posthoc_filtering_output_stats_json_path,
             project_source_code_dir,
-            add_rag_context,
             project_logger,
             overwrite,
             overwrite_posthoc_filter,
@@ -60,7 +59,6 @@ class ContextualAnalysisPipeline:
         self.posthoc_filtering_output_result_sarif_path = posthoc_filtering_output_result_sarif_path
         self.posthoc_filtering_output_stats_json_path = posthoc_filtering_output_stats_json_path
         self.project_source_code_dir = project_source_code_dir
-        self.add_rag_context = add_rag_context
         self.project_logger = project_logger
         self.overwrite = overwrite
         self.overwrite_posthoc_filter = overwrite_posthoc_filter
@@ -69,7 +67,6 @@ class ContextualAnalysisPipeline:
         self.rerun_skipped_fp = rerun_skipped_fp
         self.batch_size = batch_size
         self.skip_check_fixed_method = skip_check_fixed_method
-        self.rag_index = None
         self.alarm_results = {}
 
     def get_model(self):
@@ -264,78 +261,12 @@ class ContextualAnalysisPipeline:
                 result_str += prompt
         return result_str
 
-    def extract_rag_context(self, target_code, skip_same_nodes=False, skip_string=[]):
-        from llama_index.core.retrievers import VectorIndexRetriever
-        from llama_index.core import VectorStoreIndex
-        from llama_index.core import StorageContext, load_index_from_storage
-        from llama_index.core import Settings
-        from llama_index.embeddings.huggingface import HuggingFaceEmbedding
-
-        Settings.embed_model = HuggingFaceEmbedding(model_name="BAAI/bge-m3")
-
-        project_id=self.project_source_code_dir.split("/")[-1]
-        d=f"/home/saikatd/projects/NeurosymbolicSA/codeql/learning/index_embedding/{project_id}"
-        if self.rag_index is None:
-            self.project_logger.info("Loading index")
-            # rebuild storage context
-            storage_context = StorageContext.from_defaults(persist_dir=d)
-            # load index
-            index = load_index_from_storage(storage_context)
-            self.rag_index = index
-        else:
-            index = self.rag_index
-        #index = load_index(f"/home/saikatd/projects/NeurosymbolicSA/codeql/learning/index_embedding/{self.project_source_code_dir}")
-        retriever = VectorIndexRetriever(
-            index=index,
-            similarity_top_k=20,
-        )
-        query="Find tests related to the following code snippet:\n\n"+target_code
-        #self.project_logger.info(query)
-        nodes = retriever.retrieve(f"{query}")
-        filtered_nodes = []
-        for node in nodes:
-            # print(node.get_score())
-            # print(node.metadata)
-            if len(node.text.split("\n")) <= 3:
-                continue
-            if skip_same_nodes:
-                for skip in skip_string:
-                    if skip in node.text:
-                        continue
-            filtered_nodes.append((node.get_score(), node.text))
-            #print(node.text)
-        return filtered_nodes
-
     def path_locs_to_user_prompt(self, path_locs, enclosing_class_locs, enclosing_func_locs):
         start_loc, end_loc = path_locs[0], path_locs[-1]
         start_snippet, start_raw_snippets = self.get_snippet_from_loc(start_loc, "source", enclosing_class_locs, enclosing_func_locs)
         intermediate_steps = self.intermediate_steps_prompt(path_locs, enclosing_func_locs)
         end_snippet, end_raw_snippets = self.get_snippet_from_loc(end_loc, "sink", enclosing_class_locs, enclosing_func_locs)
         start_code_snippet, func_decl_str, class_decl_str = start_raw_snippets
-        rag_context_string = f"{func_decl_str}\n ... \n{start_code_snippet}"
-        if self.add_rag_context:
-            print("Adding RAG context")
-            nodes=self.extract_rag_context(rag_context_string, skip_same_nodes=True, skip_string=[start_code_snippet])
-            if len(nodes)>0:
-                context="Here is some additional context from the project that you may use for your analysis:\n"
-                context+="-----------------------------------------------\n"
-                for node in nodes[:1]: # using only top-1 snippets for now
-                    context+=f"{node[1].strip()}"
-                    context+="\n-----------------------------------------------\n"
-                #self.project_logger.info("Context::\n"+context)
-                prompt = POSTHOC_FILTER_USER_PROMPT_W_CONTEXT.format(
-                cwe_description=QUERIES[self.query]['desc'],
-                context=context,
-                cwe_id=f"CWE-{QUERIES[self.query]['cwe_id']}",
-                hint=POSTHOC_FILTER_HINTS[self.cwe_id],
-                source_msg=start_loc["message"],
-                source=start_snippet,
-                intermediate_steps=intermediate_steps,
-                sink_msg=end_loc["message"],
-                sink=end_snippet)
-                return prompt
-
-
         prompt = POSTHOC_FILTER_USER_PROMPT.format(
             cwe_description=QUERIES[self.query]['desc'],
             cwe_id=f"CWE-{QUERIES[self.query]['cwe_id']}",

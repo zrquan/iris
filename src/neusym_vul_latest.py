@@ -71,7 +71,6 @@ class SAPipeline:
             seed: int = 1234,
             no_summary_model: bool = False,
             use_exhaustive_qll: bool = False,
-            add_rag_context: bool = False,
             skip_huge_project: bool = False,
             skip_huge_project_num_apis_threshold: int = 3000,
             skip_posthoc_filter: bool = False,
@@ -104,7 +103,6 @@ class SAPipeline:
         self.run_id = run_id
         self.no_summary_model = no_summary_model
         self.use_exhaustive_qll = use_exhaustive_qll
-        self.add_rag_context = add_rag_context
         self.skip_huge_project = skip_huge_project
         self.skip_huge_project_num_apis_threshold = skip_huge_project_num_apis_threshold
         self.skip_posthoc_filter = skip_posthoc_filter
@@ -1071,7 +1069,6 @@ class SAPipeline:
             self.posthoc_filtering_output_result_sarif_path,
             self.posthoc_filtering_output_stats_json_path,
             self.project_source_code_dir,
-            self.add_rag_context,
             self.project_logger,
             self.overwrite,
             self.overwrite_posthoc_filter,
@@ -1126,7 +1123,6 @@ if __name__ == '__main__':
     parser.add_argument("--num-threads", type=int, default=3)
     parser.add_argument("--no-summary-model", action="store_true")
     parser.add_argument("--use-exhaustive-qll", action="store_true")
-    parser.add_argument("--add-rag-context", action="store_true")
     parser.add_argument("--filter-by-module", action="store_true")
     parser.add_argument("--filter-by-module-large", action="store_true")
     parser.add_argument("--skip-huge-project", action="store_true")
@@ -1162,7 +1158,6 @@ if __name__ == '__main__':
         seed=args.seed,
         no_summary_model=args.no_summary_model,
         use_exhaustive_qll=args.use_exhaustive_qll,
-        add_rag_context=args.add_rag_context,
         skip_huge_project=args.skip_huge_project,
         skip_huge_project_num_apis_threshold=args.skip_huge_project_num_apis_threshold,
         skip_posthoc_filter=args.skip_posthoc_filter,
