@@ -10,8 +10,8 @@ THIS_SCRIPT_DIR = os.path.dirname(os.path.realpath(__file__))
 NEUROSYMSA_ROOT_DIR = os.path.abspath(f"{THIS_SCRIPT_DIR}/../../")
 sys.path.append(NEUROSYMSA_ROOT_DIR)
 
-from codeql.strategies_v2.config import CODEQL_DIR, OUTPUT_DIR
-from codeql.strategies_v2.queries import QUERIES
+from src.config import CODEQL_DIR, OUTPUT_DIR
+from src.queries import QUERIES
 
 YAML_DIR = f"{CODEQL_DIR}/qlpacks/codeql/java-all/0.8.3/ext"
 

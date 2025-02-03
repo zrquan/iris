@@ -9,12 +9,12 @@ NEUROSYMSA_ROOT_DIR = os.path.abspath(f"{THIS_SCRIPT_DIR}/../../")
 sys.path.append(NEUROSYMSA_ROOT_DIR)
 
 try:
-    from codeql.strategies_v2.config_latest import PROJECT_SOURCE_CODE_DIR
+    from src.config import PROJECT_SOURCE_CODE_DIR
 except:
     print("[ERROR] Configuration file (config.py) not found. Under strategies directory, do\n\n\tcp config_template.py config.py\n\nand modify the content of config.py")
     exit(1)
 
-from codeql.strategies_v2.queries import QUERIES
+from src.queries import QUERIES
 
 def collect_projects_for_query(query, cwe_id, all_cves_with_commit, all_project_tags):
     for (_, proj_row) in all_cves_with_commit.iterrows():
