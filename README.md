@@ -230,7 +230,7 @@ Feel free to address any open issues or add your own issue and fix. We love feed
 ## Citation 
 Consider citing our paper:
 ```
-@inproceedings{li2024iris,
+@inproceedings{li2025iris,
 title={LLM-Assisted Static Analysis for Detecting Security Vulnerabilities},
 author={Ziyang Li and Saikat Dutta and Mayur Naik},
 booktitle={International Conference on Learning Representations},
