@@ -22,11 +22,11 @@ IRIS is a neurosymbolic framework that combines LLMs with static analysis for se
 ## Dataset 
 We have curated a dataset of Java projects, containing 120 vulnerabilities across 4 common vulnerability classes. 
 
-[CWE-Bench-Java](https://github.com/seal-research/cwe-bench-java)
+[CWE-Bench-Java](https://github.com/iris-sast/cwe-bench-java)
 ## Environment Setup
 First, clone the repository. We have included `cwe-bench-java` as a submodule, so use the following command the clone correctly
 ```bash
-$ git clone https://github.com/seal-research/iris --recursive
+$ git clone https://github.com/iris-sast/iris --recursive
 ```
 ### 1. Conda environment  
 Run `scripts/setup_environment.sh`. 
@@ -36,7 +36,7 @@ $ bash ./scripts/setup_environment.sh
 ```
 This will do the following:
 - creates a conda environment specified by environment.yml
-- installs our [patched version of CodeQL](https://github.com/seal-research/iris/releases/tag/codeql-0.8.3-patched). This version of CodeQL **is necessary** for IRIS.
+- installs our [patched version of CodeQL](https://github.com/iris-sast/iris/releases/tag/codeql-0.8.3-patched). This version of CodeQL **is necessary** for IRIS.
 - creates a directory to store CodeQL databases. 
 ### 2. Fetch and build Java projects
 We have included CWE-Bench-Java as a submodule in IRIS in the data folder. We have also provided scripts to fetch and build Java projects to be used with IRIS. 
