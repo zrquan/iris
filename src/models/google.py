@@ -22,7 +22,6 @@ class GoogleModel(LLM):
         super().__init__(model_name, logger, _model_name_map, **kwargs)
         self.terminators = [
                 self.pipe.tokenizer.eos_token_id,
-        #        self.pipe.tokenizer.convert_tokens_to_ids("<|eot_id|>")
         ]
 
     def predict(self, main_prompt, batch_size=0, no_progress_bar=False):

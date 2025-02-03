@@ -109,24 +109,14 @@ class LLM:
             with torch.backends.cuda.sdp_kernel(enable_flash=True, enable_math=False, enable_mem_efficient=False):
                 torch.cuda.synchronize()
                 print(">>flash enabled", torch.backends.cuda.flash_sdp_enabled())
-                # input_ids=self.tokenizer(prompt, return_tensors="pt").input_ids.to('cuda')
                 print("params", self.model_hyperparams['max_new_tokens'])
-                # output=self.model.generate(inputs=input_ids, max_new_tokens=self.model_hyperparams['max_new_tokens'], temperature=self.model_hyperparams['temperature'], top_p=self.model_hyperparams['top_p'])
-                # print(input_ids)
-                # print(input_ids.shape, len(output[0]))
-                # ids=output[0][input_ids.shape[1]:]
-                # output=self.tokenizer.decode(ids, skip_special_tokens=True)
-                # print(output)
-                # return prompt, output
                 output = self.pipe(
                     prompt,
                     max_new_tokens=self.model_hyperparams['max_new_tokens'],
                     temperature=self.model_hyperparams['temperature'],
                     top_p=self.model_hyperparams['top_p'],
                     pad_token_id=self.tokenizer.eos_token_id,
-                    #eos_token_id=self.tokenizer.eos_token_id,
                     return_full_text=False
-                    #skip_special_tokens=True
                 )
         else:
             if batch_size > 0:
@@ -138,31 +128,7 @@ class LLM:
                     def __len__(self):
                         return len(self.original_list)
                     def __getitem__(self, i):
-                        return self.original_list[i]
-                #from torch.utils.data import DataLoader
-                # mydataset=ListDataset(prompt)
-                # data_loader = DataLoader(mydataset, batch_size=batch_size, shuffle=False)
-
-                #for i in tqdm.tqdm(range(0, len(prompt), batch_size), disable=no_progress_bar):
-                # pbar = tqdm.tqdm(data_loader)
-                # for i, prompt_b in enumerate(pbar):
-                #     #prompt_b = prompt[i:i+batch_size]
-                #     #mydataset = ListDataset(prompt_b)
-                #     #print(mydataset.__dict__)
-                #     result = self.pipe(prompt_b,
-                #                        max_new_tokens=self.model_hyperparams['max_new_tokens'],
-                #                        temperature=self.model_hyperparams['temperature'],
-                #                        top_p=self.model_hyperparams['top_p'],
-                #                        eos_token_id=self.terminators,
-                #                        pad_token_id=self.tokenizer.eos_token_id,
-                #                        #eos_token_id=self.tokenizer.eos_token_id,
-                #                        return_full_text=False,
-                #                        do_sample=False
-                #                        )
-                #     #print(result)
-                #     output.extend([r[0]['generated_text'] for r in result])
-                #     pbar.set_description(f"Processing Batch {i+1}/{len(data_loader)}, #Outputs : {len(output)}")
-                    #print(len(output))
+                        return self.original_list[i] 
 
                 mydataset=ListDataset(prompt)
                 for result in tqdm.tqdm(self.pipe(mydataset,
@@ -217,10 +183,6 @@ class LLM:
             from models.codegen import CodegenModel
 
             model = CodegenModel(model_name, logger, **kwargs)
-        # elif model_name.lower().startswith("gpt"):
-        #     from models.openaimodels import OpenAIModel
-
-        #     model = OpenAIModel(model_name=model_name, logger=logger, **kwargs)
         elif model_name.lower().startswith("codet5p"):
             from models.codet5 import CodeT5PlusModel
 

@@ -148,41 +148,14 @@ class EvaluationPipeline:
         thread_flow = code_flow["threadFlows"][0]
         locations = thread_flow["locations"]
         first_location = locations[0]
-        last_location = locations[-1]
-
-        # {
-        #   'location': {
-        #     'physicalLocation': {
-        #       'artifactLocation': {
-        #         'uri': 'dspace-api/src/main/java/org/dspace/administer/CommunityFiliator.java',
-        #         'uriBaseId': '%SRCROOT%',
-        #         'index': 0
-        #       },
-        #       'region': {
-        #         'startLine': 81,
-        #         'startColumn': 24,
-        #         'endColumn': 48
-        #       }
-        #     },
-        #     'message': {
-        #       'text': 'getOptionValue(...) : String'
-        #     }
-        #   }
-        # }
+        last_location = locations[-1] 
 
         def is_println(loc):
-            # line = self.get_source_line(loc)
-            # if ".println(" in line or ".print(" in line: return True
             return False
 
         def ignore_location(loc):
             if "toString" in loc['location']['message']['text']: return True
-            if "println" in loc['location']['message']['text']: return True
-            # if "... + ..." in loc['location']['message']['text']: return True
-            # if "next(" in loc['location']['message']['text']: return True
-            # if "getOptionValue(" in loc['location']['message']['text']: return True
-            # if "get(" in loc['location']['message']['text']: return True
-            # if "getProperty(" in loc['location']['message']['text']: return True
+            if "println" in loc['location']['message']['text']: return True 
             return False
 
         ignore = is_println(last_location)
@@ -254,12 +227,10 @@ class EvaluationPipeline:
         if os.path.exists(self.final_output_json_path) and not self.overwrite:
             result = json.load(open(self.final_output_json_path))
             if self.project_logger is not None:
-                # self.project_logger.info(f"    ==> [Recall@File]   RESULT: {result['recall_file']}, #Paths: {result['num_paths']}, #TP: {result['num_tp_paths_file']}")
                 self.project_logger.info(f"    ==> [Recall@Method] RESULT: {result['recall_method']}, #Paths: {result['num_paths']}, #TP: {result['num_tp_paths_method']}")
         elif os.path.exists(self.query_output_result_sarif_path):
             result = self.evaluate_sarif_result(self.query_output_result_sarif_path)
             if self.project_logger is not None:
-                # self.project_logger.info(f"    ==> [Recall@File]   RESULT: {result['recall_file']}, #Paths: {result['num_paths']}, #TP: {result['num_tp_paths_file']}")
                 self.project_logger.info(f"    ==> [Recall@Method] RESULT: {result['recall_method']}, #Paths: {result['num_paths']}, #TP: {result['num_tp_paths_method']}")
             json.dump(result, open(self.final_output_json_path, "w"))
         else:
@@ -287,7 +258,6 @@ class EvaluationPipeline:
                 vanilla_result = self.evaluate_sarif_result(self.query_output_result_sarif_path)
 
                 if self.project_logger is not None:
-                    # self.project_logger.info(f"    ==> [Recall@File]   RESULT: {vanilla_result['recall_file']}, #Paths: {vanilla_result['num_paths']}, #TP Paths: {vanilla_result['num_tp_paths_file']}")
                     self.project_logger.info(f"    ==> [Recall@Method] RESULT: {vanilla_result['recall_method']}, #Paths: {vanilla_result['num_paths']}, #TP Paths: {vanilla_result['num_tp_paths_method']}")
 
                 result.update({ "vanilla_result": vanilla_result })
@@ -299,7 +269,6 @@ class EvaluationPipeline:
                 posthoc_result = self.evaluate_sarif_result(self.posthoc_filtering_output_result_sarif_path)
 
                 if self.project_logger is not None:
-                    # self.project_logger.info(f"    ==> [Recall@File]   RESULT: {posthoc_result['recall_file']}, #Paths: {posthoc_result['num_paths']}, #TP Paths: {posthoc_result['num_tp_paths_file']}")
                     self.project_logger.info(f"    ==> [Recall@Method] RESULT: {posthoc_result['recall_method']}, #Paths: {posthoc_result['num_paths']}, #TP Paths: {posthoc_result['num_tp_paths_method']}")
 
                 result.update({ "posthoc_filter_result": posthoc_result })
@@ -311,9 +280,7 @@ class EvaluationPipeline:
         else:
             if "vanilla_result" in result:
                 self.project_logger.info("  ==> Evaluating results after stage 6 (vanilla)...")
-                # self.project_logger.info(f"    ==> [Recall@File]   RESULT: {result['vanilla_result']['recall_file']}, #Paths: {result['vanilla_result']['num_paths']}, #TP Paths: {result['vanilla_result']['num_tp_paths_file']}")
                 self.project_logger.info(f"    ==> [Recall@Method] RESULT: {result['vanilla_result']['recall_method']}, #Paths: {result['vanilla_result']['num_paths']}, #TP Paths: {result['vanilla_result']['num_tp_paths_method']}")
             if "posthoc_filter_result" in result:
                 self.project_logger.info("  ==> Evaluating results after stage 7 (with posthoc-filtering)...")
-                # self.project_logger.info(f"    ==> [Recall@File]   RESULT: {result['posthoc_filter_result']['recall_file']}, #Paths: {result['posthoc_filter_result']['num_paths']}, #TP Paths: {result['posthoc_filter_result']['num_tp_paths_file']}")
                 self.project_logger.info(f"    ==> [Recall@Method] RESULT: {result['posthoc_filter_result']['recall_method']}, #Paths: {result['posthoc_filter_result']['num_paths']}, #TP Paths: {result['posthoc_filter_result']['num_tp_paths_method']}")

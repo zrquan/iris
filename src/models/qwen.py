@@ -21,13 +21,11 @@ class QwenModel(LLM):
         super().__init__(model_name, logger, _model_name_map, **kwargs)
         self.terminators = [
                 self.pipe.tokenizer.eos_token_id
-        #        self.pipe.tokenizer.convert_tokens_to_ids("<|eot_id|>")
         ]
 
     def predict(self, main_prompt, batch_size=0, no_progress_bar=False): 
         # assuming 0 is system and 1 is user
        
-        #prompt = f"<s>[INST] <<SYS>>\\n{system_prompt}\\n<</SYS>>\\n\\n{user_prompt}[/INST]"
         if batch_size > 0:
             prompts = [self.pipe.tokenizer.apply_chat_template(p, tokenize=False, add_generation_prompt=True) for p in main_prompt]
             self.model_hyperparams['temperature']=0.01

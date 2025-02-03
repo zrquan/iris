@@ -21,14 +21,12 @@ class CodeLlamaModel(LLM):
         super().__init__(model_name, logger, _model_name_map, **kwargs)
         self.terminators = [
                 self.pipe.tokenizer.eos_token_id,
-        #        self.pipe.tokenizer.convert_tokens_to_ids("<|eot_id|>")
         ]
 
 
     def predict(self, main_prompt, batch_size=0, no_progress_bar=False):
         if batch_size > 0:
             prompts = [self.pipe.tokenizer.apply_chat_template(p, tokenize=False, add_generation_prompt=True) for p in main_prompt]
-            #print(prompts[0])
             self.model_hyperparams['temperature']=0.01
             return self.predict_main(prompts, batch_size=batch_size, no_progress_bar=no_progress_bar)
         else:
