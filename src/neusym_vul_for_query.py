@@ -9,7 +9,7 @@ NEUROSYMSA_ROOT_DIR = os.path.abspath(f"{THIS_SCRIPT_DIR}/../")
 sys.path.append(NEUROSYMSA_ROOT_DIR)
 
 try:
-    from src.config import CVES_MAPPED_W_COMMITS_DIR, CVE_REPO_TAGS_DIR
+    from src.config import CVES_MAPPED_W_COMMITS_DIR 
 except:
     print("[ERROR] Configuration file (config.py) not found. Under strategies directory, do\n\n\tcp config_template.py config.py\n\nand modify the content of config.py")
     exit(1)
@@ -71,7 +71,7 @@ if __name__ == '__main__':
     cwe_id = QUERIES[query]["cwe_id_tag"]
 
     all_cves_with_commit = pd.read_csv(CVES_MAPPED_W_COMMITS_DIR).dropna(subset=["cwe", "cve", "commits"])
-    all_project_tags = pd.read_csv(CVE_REPO_TAGS_DIR).dropna(subset=["project", "cve", "tag"])
+    all_project_tags = pd.read_csv(CVES_MAPPED_W_COMMITS_DIR).dropna(subset=["project_slug", "cve", "github_tag"])
 
     relevant_projects = list(collect_projects_for_query(query, cwe_id, all_cves_with_commit, all_project_tags))
 
