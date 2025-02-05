@@ -22,7 +22,7 @@ sys.path.append(NEUROSYMSA_ROOT_DIR)
 try:
     from src.config import CODEQL_DIR, CODEQL_DB_PATH, OUTPUT_DIR, PROJECT_SOURCE_CODE_DIR, PACKAGE_MODULES_PATH
 except:
-    print("[ERROR] Configuration file (config_latest.py) not found. Under strategies directory, do\n\n\tcp config_template.py config.py\n\nand modify the content of config.py")
+    print("[ERROR] Configuration file (config.py) not found. Under strategies directory, do\n\n\tcp config_template.py config.py\n\nand modify the content of config.py")
     exit(1)
 
 from src.logger import Logger
