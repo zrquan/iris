@@ -11,6 +11,15 @@ model_name_map={
     'codellama-7b-instruct': 'CodeLlama-7B'
 }
 
+# prompt_type_map={
+#     ('simple','generic'): 'Generic',
+#     ('generic', 'generic'): 'Generic',
+#     ('simple', 'cwe_specific'): 'CWE-Specific',
+#     ('generic', 'cwe_specific'): 'CWE-Specific',
+#     ('dataflow_steps', 'cwe_specific'): 'Dataflow Steps',
+#     ('generic_explanation_first', 'cwe_specific'): 'CWE-Specific (CoT)'
+# }
+
 cwe_seq = set()
 top25=open('utils/cwe_top_25.txt').read().strip().split('\n')
 
@@ -50,10 +59,22 @@ def process(main_dir, lang):
             continue
         if "datasets" in d or "codeql" in d:
             continue
-       
+        # if "paper_results_3" not in d:
+        #     continue
+        # if "validated" not in d:
+        #     continue
         if "paper_results_cwe_specific" not in d:
             continue
 
+        # ## Ignore the self reflection results
+        # if "validated" in d:
+        #     continue
+
+        # Only consider explanation first results
+        # if "explanation_first_basic" not in d:
+        #     continue
+        # if 'ash07' not in d:
+        #     continue
         if lang == "java":
             if not ('owasp' in d or 'juliet-java' in d or 'cvefixes-java' in d):
                 continue
@@ -64,6 +85,7 @@ def process(main_dir, lang):
         
         results = compute_results(d)
         df=pd.DataFrame.from_dict(results, orient="index")
+        # print(df.head())
         if 'juliet-cpp-1.3' in d:
             df=filter(df, indices='results/juliet-cpp-1.3-indices-2k.txt')
         elif 'juliet-java-1.3' in d:
@@ -110,7 +132,13 @@ def process(main_dir, lang):
 
 def gen_table(all_results_df, lang):
     model_names=[all_results_df[k][1]['Model'] for k in all_results_df]
-    model_seq=['gpt-4', 'gpt-3.5', 'codellama-13b-instruct', 'codellama-7b-instruct'] 
+    model_seq=['gpt-4', 'gpt-3.5', 'codellama-13b-instruct', 'codellama-7b-instruct']
+    # prompt_seq=[('simple','generic'), 
+    #             ('generic', 'generic'), 
+    #             ('simple', 'cwe_specific'), 
+    #             ('generic', 'cwe_specific'), 
+    #             ('dataflow_steps', 'cwe_specific'),
+    #             ('generic_explanation_first', 'cwe_specific')]
     dataset_seq = ['owasp', 'juliet-java-1.3', 'cvefixes-java-method', 'juliet-cpp-1.3', 'cvefixes-c-cpp-method']
     if lang == "java":
         dataset_seq = ['owasp', 'juliet-java-1.3', 'cvefixes-java-method']
@@ -123,22 +151,29 @@ def gen_table(all_results_df, lang):
     metrics_header=[""]
     metrics_header.extend(["A", "P", "R", "F1"]*len(dataset_seq))
     entries.append(metrics_header)
+    # for m in model_seq:       
     for cwe in top25:
         if cwe not in cwe_seq:
             continue
         entry=[]
+        # entry.append(model_name_map[m])
         entry.append("CWE-"+str(cwe))
         for data in dataset_seq:
-            res=[all_results_df[k][0] for k in all_results_df  
+            res=[all_results_df[k][0] for k in all_results_df 
+                    # if all_results_df[k][1]['Model'] == m 
+                #  and all_results_df[k][1]['CWE'] == "CWE-" + str(cwe) 
+                    # and all_results_df[k][1]['Dataset'] == data]
                     if all_results_df[k][1]['Dataset'] == data]
             print(cwe, data)
             assert len(res)<=1, print(res)
             if len(res) == 0:
+                # entry.append('-')
                 entry.append('-')
                 entry.append('-')
                 entry.append('-')
                 entry.append('-')
             elif cwe not in res[0]["true_cwe"].unique():
+                # entry.append('-')
                 entry.append('-')
                 entry.append('-')
                 entry.append('-')
@@ -147,6 +182,7 @@ def gen_table(all_results_df, lang):
                 df=res[0]
                 df=df[df["true_cwe"] == cwe]
                 metrics= compute_precision_recall_accuracy(df, "true_label", "llm_label")
+                # entry.append(len(df))
                 entry.append(format(metrics['accuracy'], '.2f'))
                 entry.append(format(metrics['precision'], '.2f'))
                 entry.append(format(metrics['recall'], '.2f'))
@@ -159,7 +195,10 @@ def gen_table(all_results_df, lang):
 
 
 if __name__ == "__main__":
+    # all_results_df = process('./results', "java")
+    # entries, headers = gen_table(all_results_df, "java")
     lang = "java"
+    # lang = "cpp"
     all_results_df = process('./', lang)
     entries, headers = gen_table(all_results_df, lang)
 
@@ -177,5 +216,6 @@ if __name__ == "__main__":
             headers=headers,
             tablefmt="latex_raw",
             floatfmt='.2f'
+            #floatfmt=(".0f", ".0f",  ".2f", ".2f", ".2f",".2f", ".2f", ".2f",".2f", ".2f", ".2f",".2f", ".2f", ".2f",".2f", ".2f", ".2f"),
         )
     )

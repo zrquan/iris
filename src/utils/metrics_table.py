@@ -55,9 +55,12 @@ mapper={
 
 def filter_df(df, indices=None, max_samples=None):   
     top25=open('utils/cwe_top_25.txt').read().strip().split('\n')
+    #print("Filtering by top 25 cwes..")      
     df=df[df['true_cwe'].isin(top25)]
     if indices is not None:
         indices = open(indices).read().strip().split('\n')       
+        # if type(df.index) != str:
+        #     indices=[int(k) for k in indices]
        
         df = df[df.index.astype(str).isin(indices)]
        
@@ -102,6 +105,8 @@ def process(main_dir, lang, models, prompts, datasets, from_cache=True):
     for d in glob(main_dir+"/*", recursive=True):
         if not os.path.isdir(d):
             continue
+        # if 'ash08' not in d:
+        #     continue
         if lang == "java":
             if not ('owasp' in d or 'juliet-java' in d or 'cvefixes-java' in d):
                 continue
@@ -134,10 +139,18 @@ def process(main_dir, lang, models, prompts, datasets, from_cache=True):
         print("!!Missing cwes: {}/{}".format(len(missing_cwes), len(df)))
         
         print("!!Missing indices: ", list(missing_labels.index))
+        ##################
         if len(missing_labels) > 0:
             print("Removing null")
             df=df[~df['llm_label_raw'].isnull()]
-       
+            # with open(os.path.join("results", os.path.basename(d)+"_missing_indices.txt"), "w") as f:
+            #     for k in missing_labels.index:
+            #         print(k, file=f)
+            # with open(os.path.join("results", os.path.basename(d)+"_final_indices.txt"), "w") as f:
+            #     for k in df.index:
+            #         print(k, file=f)
+        ##################
+
         try:
             if os.path.exists(os.path.join(d, 'argument.txt')):
                 args=open(os.path.join(d, 'argument.txt')).read().strip().split('\n')
@@ -348,6 +361,7 @@ def plot_cwe_data(cwe_metrics):
     models = ['gpt-4', 'gpt-3.5-turbo', 'codellama-34b-instruct', 'codellama-13b-instruct', 'codellama-7b-instruct']
     prompt = ('dataflow_steps', 'cwe_specific')
     import matplotlib.pyplot as plt
+    #plt.rcParams.update({'font.size': 16})
     # save plot for each dataset/model combination
     for model in models:
         for ds in cwe_metrics[model][prompt]:
@@ -483,15 +497,45 @@ def plot_codeql_results(codeql_results_df, all_results_df):
 if __name__ == "__main__":
     #python utils/metrics_table.py java|cpp [filter by indices: 1|0]
     use_cache=sys.argv[2] == "1" if len(sys.argv) > 2 else False
+    #models = [ 'gpt-4', 'gpt-3.5-turbo', 'codellama-13b-instruct', 'codellama-7b-instruct']
+    #models = ['deepseekcoder-v2-15b']#, 'deepseekcoder-33b']
     models = ['mistral-codestral-22b', 'deepseekcoder-7b', 'deepseekcoder-v2-15b', 'deepseekcoder-33b', 'llama-3.1-8b', 'llama-3.1-70b', 'codellama-34b-instruct', 'codellama-70b-instruct',
               'qwen2.5-14b', 'qwen2.5-coder-7b', 'qwen2.5-coder-1.5b', 'qwen2.5-32b']
+    #models = ['codellama-34b-instruct']
     prompts = [('simple','generic'), ('generic', 'generic'), 
                ('simple', 'cwe_specific'), ('generic', 'cwe_specific'), ('dataflow_steps', 'cwe_specific'),  ('generic', 'cpp_few_shot'), ('generic', 'java_few_shot'), ('cot', 'zero_shot_cot_cwe'),  ('cot', 'zero_shot_cot')]
     datasets = ['owasp', 'juliet-java-1.3', 'cvefixes-java-method', 'juliet-cpp-1.3', 'cvefixes-c-cpp-method']
 
+    #codeql_df = process_codeql()
+    #print(codeql_df)
+    #exit(1)
+
     all_results_df = process('./shared/v2/study_results_v2/', sys.argv[1], models, prompts, datasets, use_cache) # skip for gpt
+    #print(all_results_df)
     filter_by_indices(all_results_df)
     
+
+
+    # codeql results
+    #plot_codeql_results(codeql_df, all_results_df)
+
+    #exit(1)
+
+    #filter_common_indices(all_results_df)
+    # cwe analysis 
+    # cwe_metrics_file = os.path.join("shared/v2/study_results_v2/", "cwe_metrics.pkl")
+    # import pickle
+    # if os.path.exists(cwe_metrics_file):
+    #     cwe_metrics = pickle.load(open(cwe_metrics_file, "rb"))
+    # else:
+    #     cwe_metrics = gen_table_cwe(all_results_df, models)
+    #     with open(cwe_metrics_file, "wb") as f:
+    #         pickle.dump(cwe_metrics, f)
+    #cwe_metrics = json.load(open(cwe_metrics_file))
+    #plot_cwe_data(cwe_metrics)
+    #print(cwe_metrics)
+
+    #exit(1)
     entries, headers = gen_table(all_results_df, sys.argv[1], models)
     
     print(
@@ -508,9 +552,18 @@ if __name__ == "__main__":
             headers=headers,
             tablefmt="latex_raw",
             floatfmt='.2f'
+            #floatfmt=(".0f", ".0f",  ".2f", ".2f", ".2f",".2f", ".2f", ".2f",".2f", ".2f", ".2f",".2f", ".2f", ".2f",".2f", ".2f", ".2f"),
         )
     )
-
+    #with open(sys.argv[1]+"_results.csv", 'w') as f:
+    #    f.write(",".join([str(x) for x in headers]))
+    #    f.write("\n")
+                
+    #    for e in entries:
+    #        f.write(",".join([str(x).replace("\cellhl{", "").replace("}", "") for x in e]))
+    #        f.write("\n")
+    
+        
        
 
        

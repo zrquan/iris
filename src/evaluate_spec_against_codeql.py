@@ -120,8 +120,11 @@ if __name__ == "__main__":
   args = parser.parse_args()
 
   codeql_specs = get_all_codeql_specs(args.query)
+  # print(f"#specs: {len(codeql_specs)}")
   llm_specs = load_all_llm_specs(args.query, args.run_id, args.llm)
+  # print(f"#llm_specs: {len(llm_specs)}")
   intersection = find_intersection(codeql_specs, llm_specs)
+  # print(f"#intersections: {len(intersection)}")
   results = evaluate(intersection)
 
   print("false negative sources", results[1][0])
