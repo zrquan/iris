@@ -8,6 +8,7 @@ IRIS is a neurosymbolic framework that combines LLMs with static analysis for se
 - [Supported Models](#supported-models)
 - [Adding a CWE](#adding-a-cwe)
 - [Contributing](#contributing-and-feedback)
+- [Citation](#citation)
 
 ## Architecture
 
@@ -24,7 +25,7 @@ We have curated a dataset of Java projects, containing 120 vulnerabilities acros
 
 [CWE-Bench-Java](https://github.com/iris-sast/cwe-bench-java)
 ## Environment Setup
-First, clone the repository. We have included `cwe-bench-java` as a submodule, so use the following command the clone correctly
+First, clone the repository. We have included `cwe-bench-java` as a submodule, so use the following command to clone correctly
 ```bash
 $ git clone https://github.com/iris-sast/iris --recursive
 ```
@@ -68,7 +69,7 @@ $ python3 data/cwe-bench-java/scripts/setup.py --no-build
 # example - only build projects under CWE-022 and CWE-078
 $ python3 data/cwe-bench-java/scripts/setup.py --cwe CWE-022 CWE-078 
 
-# example - only build keycloack parojects 
+# example - only build keycloak projects 
 $ python3 data/cwe-bench-java/scripts/setup.py --filter keycloak 
 
 # example - do not build any apache related projects
