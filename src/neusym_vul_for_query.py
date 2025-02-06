@@ -5,7 +5,7 @@ import subprocess as sp
 import pandas as pd
 
 THIS_SCRIPT_DIR = os.path.dirname(os.path.realpath(__file__))
-NEUROSYMSA_ROOT_DIR = os.path.abspath(f"{THIS_SCRIPT_DIR}/../../")
+NEUROSYMSA_ROOT_DIR = os.path.abspath(f"{THIS_SCRIPT_DIR}/../")
 sys.path.append(NEUROSYMSA_ROOT_DIR)
 
 try:
