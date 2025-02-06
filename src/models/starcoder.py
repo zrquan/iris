@@ -6,7 +6,6 @@ from utils.mylogger import MyLogger
 import os
 from models.llm import LLM
 os.environ["PYTORCH_CUDA_ALLOC_CONF"] = "max_split_size_mb:64"
-os.environ["CUDA_VISIBLE_DEVICES"] = "5,6,7"
 _model_name_map = {
     "starcoder" : "bigcode/starcoder",
     "starcoder2-15b": "bigcode/starcoder2-15b"
