@@ -111,7 +111,7 @@ $ python3 data/cwe-bench-java/scripts/setup.py
 # fetch projects and don't build them
 $ python3 data/cwe-bench-java/scripts/setup.py --no-build
 
-# example - 
+# example - build the perwendel__spark_CVE-2018-9159_2.7.1 project 
 $ python3 data/cwe-bench-java/scripts/setup.py --filter perwendel__spark_CVE-2018-9159_2.7.1
 
 # example - only build projects under CWE-022 and CWE-078
