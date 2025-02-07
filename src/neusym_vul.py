@@ -625,25 +625,20 @@ class SAPipeline:
             if len(self.cve_fixing_commits) == 0:
                 self.project_logger.error("  ==> No fixing commits found for project; aborting"); return
 
-            # Iterate through all commit links
-            for commit_link in self.cve_fixing_commits:
-                # Get the commit link.
-                # e.g. https://github.com/jquery-ui-rails/jquery-ui-rails/commit/d504a40538fe5f7998439ad2f8fc5c4a1f843f1c
-                # We modify the commit link to the following
-                # e.g. https://raw.githubusercontent.com/jquery-ui-rails/jquery-ui-rails/d504a40538fe5f7998439ad2f8fc5c4a1f843f1c/README.md
-                base_link = commit_link.replace("https://github.com/", "https://raw.githubusercontent.com/").replace("/commit/", "/")
+            # Get repository information from the CSV data
+            github_username = self.project_cve_with_commit_info["github_username"]
+            github_repo = self.project_cve_with_commit_info["github_repository_name"]
+            repo_base = f"https://raw.githubusercontent.com/{github_username}/{github_repo}"
+
+            # Iterate through all commit hashes
+            for commit_hash in self.cve_fixing_commits:
+                base_link = f"{repo_base}/{commit_hash}"
                 paragraph = self.fetch_project_description_from_commit_readme(base_link)
                 if paragraph is not None:
                     return paragraph
 
-            # If not successful, fallback to readme of latest version
-            # Given the following commit link
-            # - https://github.com/jquery-ui-rails/jquery-ui-rails/commit/d504a40538fe5f7998439ad2f8fc5c4a1f843f1c
-            # We modify the link to the following
-            # - https://raw.githubusercontent.com/jquery-ui-rails/jquery-ui-rails/master/README.md
-            first_commit_link = self.cve_fixing_commits[0]
-            base_link = first_commit_link.replace("https://github.com/", "https://raw.githubusercontent.com/")
-            base_link = base_link[:base_link.index("/commit/")] + "/master"
+            # If not successful, fallback to master branch
+            base_link = f"{repo_base}/master"
             paragraph = self.fetch_project_description_from_commit_readme(base_link)
             if paragraph is not None:
                 return paragraph
@@ -1075,7 +1070,7 @@ class SAPipeline:
     def is_valid_code_flow(self, code_flow, source_is_func_param, project_methods):
         thread_flow = code_flow["threadFlows"][0]
         locations = thread_flow["locations"]
-
+    
         # if source_is_func_param:
         #     source_loc = locations[0]
         #     source_file_url = source_loc["location"]["physicalLocation"]["artifactLocation"]["uri"]
