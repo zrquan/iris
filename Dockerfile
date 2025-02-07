@@ -8,10 +8,20 @@ RUN apt-get update && apt-get install -y \
     git wget curl python3 python3-pip unzip tar \
     && rm -rf /var/lib/apt/lists/*
 
-# Install Miniconda
-RUN wget https://repo.anaconda.com/miniconda/Miniconda3-latest-Linux-x86_64.sh -O miniconda.sh \
-    && bash miniconda.sh -b -p /opt/conda \
-    && rm miniconda.sh
+# Install Miniconda based on architecture
+RUN arch=$(uname -m) && \
+    if [ "$arch" = "x86_64" ]; then \
+        MINICONDA_URL="https://repo.anaconda.com/miniconda/Miniconda3-latest-Linux-x86_64.sh"; \
+    elif [ "$arch" = "aarch64" ]; then \
+        MINICONDA_URL="https://repo.anaconda.com/miniconda/Miniconda3-latest-Linux-aarch64.sh"; \
+    else \
+        echo "Unsupported architecture: $arch"; \
+        exit 1; \
+    fi && \
+    wget $MINICONDA_URL -O miniconda.sh && \
+    bash miniconda.sh -b -p /opt/conda && \
+    rm miniconda.sh
+
 ENV PATH=/opt/conda/bin:$PATH
 
 WORKDIR /iris
