@@ -111,6 +111,9 @@ $ python3 data/cwe-bench-java/scripts/setup.py
 # fetch projects and don't build them
 $ python3 data/cwe-bench-java/scripts/setup.py --no-build
 
+# example - 
+$ python3 data/cwe-bench-java/scripts/setup.py --filter perwendel__spark_CVE-2018-9159_2.7.1
+
 # example - only build projects under CWE-022 and CWE-078
 $ python3 data/cwe-bench-java/scripts/setup.py --cwe CWE-022 CWE-078 
 
@@ -129,7 +132,7 @@ To use CodeQL, you will need to generate a CodeQL database for each project. We 
 $ python3 scripts/build_codeql_dbs.py 
 
 # build a specific CodeQL database given the project slug
-$ python3 scripts/build_codeql_dbs.py --project apache__camel_CVE-2018-8041_2.20.3
+$ python3 scripts/build_codeql_dbs.py --project perwendel__spark_CVE-2018-9159_2.7.1 
 ```
 
 ### 4. Check IRIS directory configuration in `src/config.py`
@@ -142,15 +145,15 @@ Make sure you have followed all of the environment setup instructions before pro
 
 See the [Supported CWEs](#supported-cwes) section for `--query` arguments and the [Supported Models](#supported-models) section for `--llm` arguments.
 
+The following is an example of using IRIS to analyze perwendel__spark_CVE-2018-9159_2.7.1 for vulnerabilities that fall under CWE-022, using qwen2.5-coder-7b. Query `cwe-022wLLM` refers to [cwe-22 path traversal](https://cwe.mitre.org/data/definitions/22.html). You should be able to immediately execute this command to see an example of an evaluation.  
+
+```bash
+$ python3 src/neusym_vul.py --query cwe-022wLLM --run-id <SOME_ID> --llm qwen2.5-coder-7b perwendel__spark_CVE-2018-9159_2.7.1
+```
+
 The following is an example of using IRIS to analyze zerotunaround for vulnerabilities that fall under CWE-022, using GPT-4. Query `cwe-022wLLM` refers to [cwe-22 path traversal](https://cwe.mitre.org/data/definitions/22.html). 
 ```bash
 $ python3 src/neusym_vul.py --query cwe-022wLLM --run-id <SOME_ID> --llm gpt-4 zeroturnaround__zt-zip_CVE-2018-1002201_1.12
-```
-
-
-The following is an example of using IRIS to analyze all of the cwe-java-bench projects for vulnerabilities that fall under CWE-022, using `gemma-2-27b-tai` (hosted by TogetherAI).
-```bash
-$ python3 src/neusym_vul_for_query.py --query cwe-022wLLM --run-id <SOME_ID> --llm gemma-2-27b-tai
 ```
 
 ## Supported CWEs
