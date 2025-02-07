@@ -26,33 +26,37 @@ conda env create -f environment.yml
 
 # Create necessary directories
 echo "Creating directories..."
-mkdir -p "../codeql"
-mkdir -p "../data/codeql-dbs"
+PROJECT_ROOT=$(cd ".." && pwd)
+CODEQL_DIR="$PROJECT_ROOT/codeql"
+mkdir -p "$CODEQL_DIR"
+mkdir -p "$PROJECT_ROOT/data/codeql-dbs"
 
-# Download CodeQL zip file
 echo "Downloading patched CodeQL..."
-CODEQL_URL="https://github.com/seal-research/iris/releases/download/codeql-0.8.3-patched/codeql.zip"
+CODEQL_URL="https://github.com/iris-sast/iris/releases/download/codeql-0.8.3-patched/codeql.zip"
 CODEQL_ZIP="codeql.zip"
-
 if ! curl -L -o "$CODEQL_ZIP" "$CODEQL_URL"; then
     echo "Error: Failed to download CodeQL"
     exit 1
 fi
 
-# Unzip CodeQL
 echo "Extracting CodeQL..."
-if ! unzip -q "$CODEQL_ZIP" -d "../codeql"; then
+if ! unzip -qo "$CODEQL_ZIP" -d "$CODEQL_DIR"; then
     echo "Error: Failed to extract CodeQL"
     rm -f "$CODEQL_ZIP"
     exit 1
 fi
 
-# Clean up zip file
 rm -f "$CODEQL_ZIP"
+
+CODEQL_BIN="$CODEQL_DIR/codeql"
+echo "export PATH=\"$CODEQL_BIN:$PATH\"" >> ~/.bashrc
+export PATH="$CODEQL_BIN:$PATH"
 
 echo "Setup completed successfully!"
 echo "- Conda environment 'iris' has been created"
-echo "- CodeQL has been downloaded and extracted to '../codeql'"
-echo "- Created '../data/codeql-dbs' directory"
+echo "- CodeQL has been downloaded and extracted to $CODEQL_DIR"
+echo "- Created '$PROJECT_ROOT/data/codeql-dbs' directory"
+echo "- Added CodeQL to PATH in ~/.bashrc"
 echo ""
 echo "To activate the environment, run: conda activate iris"
+echo "You may need to restart your terminal or run 'source ~/.bashrc' for PATH changes to take effect"

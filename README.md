@@ -37,7 +37,7 @@ $ bash ./scripts/setup_environment.sh
 ```
 This will do the following:
 - creates a conda environment specified by environment.yml
-- installs our [patched version of CodeQL](https://github.com/iris-sast/iris/releases/tag/codeql-0.8.3-patched). This version of CodeQL **is necessary** for IRIS.
+- installs our [patched version of CodeQL 2.15.3](https://github.com/iris-sast/iris/releases/tag/codeql-0.8.3-patched). This version of CodeQL **is necessary** for IRIS. To prevent confusion in case users already have an existing CodeQL version, we unzip this within the root of the iris directory. Then we add a PATH entry to the path of the patched CodeQL's binary.
 - creates a directory to store CodeQL databases. 
 ### 2. Fetch and build Java projects
 We have included CWE-Bench-Java as a submodule in IRIS in the data folder. We have also provided scripts to fetch and build Java projects to be used with IRIS. 
