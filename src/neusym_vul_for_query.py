@@ -8,12 +8,7 @@ THIS_SCRIPT_DIR = os.path.dirname(os.path.realpath(__file__))
 NEUROSYMSA_ROOT_DIR = os.path.abspath(f"{THIS_SCRIPT_DIR}/../")
 sys.path.append(NEUROSYMSA_ROOT_DIR)
 
-try:
-    from src.config import CVES_MAPPED_W_COMMITS_DIR
-except:
-    print("[ERROR] Configuration file (config.py) not found. Under strategies directory, do\n\n\tcp config_template.py config.py\n\nand modify the content of config.py")
-    exit(1)
-
+from src.config import CVES_MAPPED_W_COMMITS_DIR
 from src.queries import QUERIES
 
 def collect_projects_for_query(query, cwe_id, all_cves_with_commit, all_project_tags):
