@@ -202,15 +202,25 @@ The easiest way to run IRIS on a Java project not in CWE-Bench-Java is to make t
 1. Add the project info to `data/cwe-bench-java/data/project_info.csv`. For instance, to run the latest perwendel/spark version:
 
 ```
-ID,perwendel__spark_latest,,CWE-022,,perwendel,spark,latest,,,,
+ID,perwendel__spark_latest,,,,,perwendel,spark,latest,,,,
 ```
 
-The only required fields are: project slug (use a unique name), cwe_id, github username, and github tag if any.
+The only required fields are: project slug (use a unique name), github username, and github tag if any.
 
 2. Clone the project to `data/cwe-bench-java/project-sources`. Use the same folder name as the slug used above.
 3. Add build info to `data/cwe-bench-java/data/build_info.csv`. For instance, you can add: `perwendel__spark_latest,success,8u202,3.5.0,n/a,n/a` to use java 8 and mvn 3.5.0. Please use appropriate java/mvn/gradle versions as needed.
-4. Provide a list of internal packages in `data/cwe-bench-java/package-names/[slug].txt`. This should contain the package names of all internal packages of the project. E.g., `spark` for `perwendel/spark`.
-5. Follow the steps 3, 4, and quickstart steps in the installation section.
+4. Build the Java project.
+```bash
+$ python3 data/cwe-bench-java/scripts/setup.py --filter [project slug]
+```
+5. Generate the CodeQL database.
+```bash
+$ python3 scripts/build_codeql_dbs.py --project [project slug]
+```
+6. Provide a list of internal packages in `data/cwe-bench-java/package-names/[slug].txt`. This should contain the package names of all internal packages of the project. E.g., `spark` for `perwendel/spark`. The following command uses CodeQL to extract the internal packages and writes them to the required txt file in the `package-names` directory. We provided a script to automate this. 
+```bash
+$ python scripts/get_packages_codeql.py [project slug]
+```
 
 
 
